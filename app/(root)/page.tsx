@@ -5,5 +5,5 @@ export default async function Home({
 }) {
   const query = (await searchParams).query;
   const params = { search: query || null };
-  return <></>;
+  return <div className="w-60 pl-5"></div>;
 }

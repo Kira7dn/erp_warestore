@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import {
   usePathname,
@@ -9,7 +8,12 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useDebounce } from "use-debounce";
+import { cn } from "@/lib/utils";
+import { Search as SearchIcon } from "lucide-react";
+
 const Search = () => {
+  const [hover, setHover] = useState(false);
+  const [typing, setTyping] = useState(false);
   const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("query") || "";
@@ -18,6 +22,7 @@ const Search = () => {
   const router = useRouter();
   const path = usePathname();
   const [debouncedQuery] = useDebounce(query, 300);
+  const isExpand = hover || query || typing;
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -62,19 +67,32 @@ const Search = () => {
 
   return (
     <div className="relative w-full md:max-w-[480px] ">
-      <div className="flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3">
-        <Image
-          src="/assets/icons/search.svg"
-          alt="Search"
-          width={24}
-          height={24}
-        />
+      <div
+        className={cn(
+          "flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3 transition-all duration-700 ease-in-out pl-4 pr-2",
+          isExpand ? "w-full" : "w-1/3"
+        )}
+      >
         <Input
           value={query}
           placeholder="Search..."
-          className="body-2 shad-no-focus  placeholder:body-1 w-full border-none p-0 shadow-none placeholder:text-light-200"
+          className="w-full placeholder:body-1 border-none p-0 shadow-none placeholder:text-light-200 outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
           onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setTyping(true)}
+          onBlur={() => setTyping(false)}
         />
+        <div
+          className={cn(
+            "rounded-full px-1 transition-all duration-700 ease-in-out"
+          )}
+        >
+          <SearchIcon
+            className={cn(
+              "w-4 h-4 transition-all duration-700 ease-in-out",
+              isExpand ? "scale-125 text-primary" : ""
+            )}
+          />
+        </div>
 
         {open && (
           <ul className="absolute left-0 top-16 z-50 flex w-full flex-col gap-3 rounded-[20px] bg-white p-4">

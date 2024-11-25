@@ -6,31 +6,29 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./sanity/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      screens: {
-        xs: "475px",
-      },
       colors: {
-        primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+        brand: {
+          "100": "#e6004c",
+          DEFAULT: "#A50034",
         },
-        secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
+        red: "#FF7474",
+        error: "#b80000",
+        green: "#3DD9B3",
+        blue: "#56B8FF",
+        pink: "#EEA8FD",
+        orange: "#F9AB72",
+        light: {
+          "100": "#333F4E",
+          "200": "#A3B2C7",
+          "300": "#F2F5F9",
+          "400": "#F2F4F8",
         },
-        black: {
-          "100": "#333333",
-          "200": "#141413",
-          "300": "#7D8087",
-          DEFAULT: "#000000",
-        },
-        white: {
-          "100": "#F7F7F7",
-          DEFAULT: "#FFFFFF",
+        dark: {
+          "100": "#04050C",
+          "200": "#131524",
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -41,6 +39,14 @@ const config: Config = {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -66,26 +72,35 @@ const config: Config = {
         },
       },
       fontFamily: {
-        "work-sans": ["var(--font-work-sans)"],
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        poppins: ["var(--font-poppins)"],
       },
       boxShadow: {
         "drop-1": "0px 10px 30px 0px rgba(66, 71, 97, 0.1)",
         "drop-2": "0 8px 30px 0 rgba(65, 89, 214, 0.3)",
         "drop-3": "0 8px 30px 0 rgba(65, 89, 214, 0.1)",
       },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": {
+            opacity: "1",
+          },
+          "20%,50%": {
+            opacity: "0",
+          },
+        },
+      },
+      animation: {
+        "caret-blink":
+          "caret-blink 1.25s ease-out infinite",
+      },
     },
   },
-  plugins: [
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require("tailwindcss-animate"),
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require("@tailwindcss/typography"),
-  ],
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  plugins: [require("tailwindcss-animate")],
 };
-
 export default config;

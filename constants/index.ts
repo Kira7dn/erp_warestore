@@ -100,7 +100,7 @@ export const levels = [
 
 export const mainLinks = [
   {
-    route: "/admin",
+    route: "/",
     label: "Dashboard",
     component: RiDashboard2Line,
   },
