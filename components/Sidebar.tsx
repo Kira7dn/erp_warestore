@@ -35,7 +35,7 @@ const Sidebar = () => {
       </Link>
 
       <nav className="sidebar-nav">
-        <ul className="flex flex-1 flex-col gap-6">
+        <ul className="flex flex-1 flex-col gap-2">
           {mainLinks.map(({ route, label, component }) => {
             const Component = component;
 
@@ -48,13 +48,16 @@ const Sidebar = () => {
                 <li
                   className={cn(
                     "sidebar-nav-item",
-                    pathname === route && "shad-active"
+                    (pathname === route ||
+                      pathname.includes(route + "/")) &&
+                      "shad-active"
                   )}
                 >
                   <Component
                     className={cn(
                       "nav-icon",
-                      pathname === route &&
+                      (pathname === route ||
+                        pathname.includes(route + "/")) &&
                         "nav-icon-active"
                     )}
                   />
@@ -67,10 +70,10 @@ const Sidebar = () => {
       </nav>
 
       <Image
-        src="/assets/images/files-2.png"
+        src="/assets/images/warehouse.png"
         alt="logo"
-        width={506}
-        height={418}
+        width={200}
+        height={200}
         className="w-full"
       />
     </aside>

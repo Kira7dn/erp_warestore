@@ -11,7 +11,7 @@ export default async function Layout({
       <Sidebar />
       <section className="flex-1 flex h-full flex-col">
         <Navbar />
-        {children}
+        <div className="main-content">{children}</div>
       </section>
     </main>
   );
