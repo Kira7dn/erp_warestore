@@ -69,7 +69,7 @@ const Search = () => {
     <div className="relative w-full md:max-w-[480px] ">
       <div
         className={cn(
-          "flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3 transition-all duration-700 ease-in-out pl-4 pr-2",
+          "flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3 transition-all duration-700 ease-in-out pl-4 pr-2 bg-white",
           isExpand ? "w-full" : "w-1/3"
         )}
       >

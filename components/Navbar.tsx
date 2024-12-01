@@ -10,24 +10,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import HeaderTitle from "./HeaderTitle";
 
 const Navbar = async () => {
   const session = await auth();
 
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   return (
     <header className="items-center justify-between gap-5 px-10 sm:flex lg:py-4 xl:gap-10">
       <div className="flex gap-10 items-center w-full">
-        <div className="hidden text-xl font-semibold text-gray-600 md:block">
-          {formattedDate}
-        </div>
+        <HeaderTitle />
         <Search />
       </div>
       <div className="flex items-center text-black flex-center min-w-fit gap-4">

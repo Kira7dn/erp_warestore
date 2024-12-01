@@ -3,7 +3,6 @@ import {
   Bolt,
   Paintbrush,
   Cpu,
-  Warehouse,
   ScanQrCode,
   Settings,
 } from "lucide-react";
@@ -13,27 +12,25 @@ export const mainLinks = [
     route: "/",
     label: "Dashboard",
     component: LayoutDashboard,
+    children: [
+      {
+        route: "/sparepart",
+        label: "Spare Part",
+        component: Bolt,
+      },
+      {
+        route: "/consumable",
+        label: "Consumable",
+        component: Paintbrush,
+      },
+      {
+        route: "/material",
+        label: "Material",
+        component: Cpu,
+      },
+    ],
   },
-  {
-    route: "/sparepart",
-    label: "Spare Part",
-    component: Bolt,
-  },
-  {
-    route: "/consumable",
-    label: "Consumable",
-    component: Paintbrush,
-  },
-  {
-    route: "/material",
-    label: "Material",
-    component: Cpu,
-  },
-  // {
-  //   route: "/warehouse",
-  //   label: "Warehouse",
-  //   component: Warehouse,
-  // },
+
   {
     route: "/scan",
     label: "QR Scan",
@@ -45,3 +42,10 @@ export const mainLinks = [
     component: Settings,
   },
 ];
+
+export interface LinkType {
+  route: string;
+  label: string;
+  component: React.ComponentType<{ className?: string }>;
+  children?: LinkType[];
+}

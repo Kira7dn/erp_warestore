@@ -2,27 +2,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 import {
-  Bolt,
   PlusCircle,
   Sparkles,
   Warehouse,
 } from "lucide-react";
 import { mainLinks } from "@/constants";
+import Search from "@/components/Search";
 
-const Page = async ({
-  searchParams,
-  params,
-}: SearchParamProps) => {
+const Page = async ({ params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
   const Icon =
     mainLinks.find((link) => link.route === `/${type}`)
       ?.component || Sparkles;
   return (
     <div className="page-container">
-      <section className="w-full flex justify-between">
-        <h1 className="text-2xl font-bold uppercase">
-          {type}
-        </h1>
+      <section className="w-full flex justify-between items-center">
         <div className="flex gap-2">
           <Link href={`/${type}/create`}>
             <Button
@@ -65,6 +59,7 @@ const Page = async ({
             </Button>
           </Link>
         </div>
+        <Search />
       </section>
     </div>
   );
