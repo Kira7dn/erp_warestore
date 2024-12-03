@@ -47,20 +47,18 @@ const Sidebar = () => {
               <Link href={route} className="lg:w-full">
                 <li
                   className={cn(
-                    "sidebar-nav-item",
-                    isActive &&
-                      (isChildren
-                        ? "shad-active opacity-50 py-2"
-                        : "shad-active"),
-                    isChildren && "text-sm py-2"
+                    isChildren
+                      ? "sidebar-nav-item-children"
+                      : "sidebar-nav-item",
+                    isActive && "shad-active"
                   )}
                 >
                   <div className="flex gap-2 items-center">
                     <Component
                       className={cn(
                         isChildren
-                          ? "nav-icon w-4 h-4"
-                          : "nav-icon w-6 h-6",
+                          ? "nav-icon-children"
+                          : "nav-icon",
                         isActive && "nav-icon-active"
                       )}
                     />
@@ -90,7 +88,7 @@ const Sidebar = () => {
               </Link>
             </div>
             {children && isOpen && (
-              <ul className="ml-4 mt-4">
+              <ul className="ml-10 mt-4 space-y-4">
                 {renderLinks(children, true)}
               </ul>
             )}

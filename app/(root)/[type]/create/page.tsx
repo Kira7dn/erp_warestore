@@ -1,3 +1,4 @@
+import CreatePartForm from "@/components/CreatePartForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
@@ -12,6 +13,7 @@ const Create = async ({ params }: SearchParamProps) => {
           <Button>{`Back to ${type}`}</Button>
         </Link>
       </div>
+      <CreatePartForm type={type} />
     </div>
   );
 };

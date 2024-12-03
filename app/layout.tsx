@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import createLocalFont from "next/font/local";
 import "./globals.css";
 import type { Viewport } from "next";
+import { Toaster } from "@/components/ui/toaster";
 
 export const viewport: Viewport = {
   viewportFit: "cover",
@@ -59,10 +60,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
+      // suppressHydrationWarning
       className={`${LGEI.className}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

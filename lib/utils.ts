@@ -12,3 +12,6 @@ export const handleError = (error: unknown) => {
       : JSON.stringify(error)
   );
 };
+export function parseServerActionResponse<T>(response: T) {
+  return JSON.parse(JSON.stringify(response));
+}

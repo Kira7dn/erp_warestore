@@ -1,8 +1,8 @@
 "use server";
 import { connectToDatabase } from "@/lib/database";
 import { handleError } from "@/lib/utils";
-import User from "../models/users.model";
 import { auth } from "@/auth";
+import User from "@/lib/database/models/users.model";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createUser(data: any) {

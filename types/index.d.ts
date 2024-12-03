@@ -4,3 +4,8 @@ declare interface SearchParamProps {
     [key: string]: string | string[] | undefined;
   }>;
 }
+
+declare type PartType =
+  | "sparepart"
+  | "consumable"
+  | "material";
