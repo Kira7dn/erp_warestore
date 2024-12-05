@@ -3,6 +3,7 @@ import createLocalFont from "next/font/local";
 import "./globals.css";
 import type { Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 export const viewport: Viewport = {
   viewportFit: "cover",
@@ -64,7 +65,8 @@ export default function RootLayout({
       className={`${LGEI.className}`}
     >
       <body>
-        {children}
+        <EdgeStoreProvider>{children}</EdgeStoreProvider>
+
         <Toaster />
       </body>
     </html>
