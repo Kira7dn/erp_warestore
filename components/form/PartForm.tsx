@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { useActionState } from "react"; // Ensure correct import
 import { partValidationSchema } from "@/lib/validation";
@@ -11,21 +9,49 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { SingleImageDropzone } from "./SingleImageDropzone";
+import { SingleImageDropzone } from "../SingleImageDropzone";
+import { useEdgeStore } from "@/lib/edgestore";
+import { resizeImage } from "@/lib/utils";
 
-const CreatePartForm = ({ type }: { type: string }) => {
+type FormProps = {
+  type: string;
+  action: "create" | "update";
+  data?: PartDataType;
+};
+const PartForm = ({ type, action, data }: FormProps) => {
   const [errors, setErrors] = useState<
     Record<string, string>
   >({});
   const { toast } = useToast();
   const router = useRouter();
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | string>(
+    data?.image || ""
+  );
+  const { edgestore } = useEdgeStore();
+
+  const initialFormValues = {
+    name: data?.name || "",
+    specification: data?.specification || "",
+    brand: data?.brand || "",
+    category: data?.category || "",
+  };
 
   const handleFormSubmit = async (
-    prevState: any,
+    prevState: { error: string; status: string },
     formData: FormData
   ) => {
     try {
+      if (file instanceof File) {
+        const resizedFile = (await resizeImage(
+          file,
+          800,
+          800
+        )) as File; // Resize to max 800x800
+        const res = await edgestore.publicFiles.upload({
+          file: resizedFile,
+        });
+        setFile(res.url);
+      }
       const formValues = {
         name: formData.get("name") as string,
         type,
@@ -33,15 +59,11 @@ const CreatePartForm = ({ type }: { type: string }) => {
           "specification"
         ) as string,
         brand: formData.get("brand") as string,
-        image: formData.get("image") as string,
+        image: file,
         category: formData.get("category") as string,
       };
       await partValidationSchema.parseAsync(formValues);
-      const result = await createPart(
-        prevState,
-        formData,
-        type
-      );
+      const result = await createPart(formData, type);
       if (result.status == "SUCCESS") {
         toast({
           title: "Success",
@@ -83,6 +105,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
       };
     }
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(
     handleFormSubmit,
     {
@@ -90,16 +113,6 @@ const CreatePartForm = ({ type }: { type: string }) => {
       status: "INITIAL",
     }
   );
-
-  const handleImageChange = (file?: File) => {
-    console.log(file);
-
-    if (file) {
-      const formData = new FormData();
-      formData.set("image", file);
-      // Update the form data with the new image file
-    }
-  };
 
   return (
     <form action={formAction} className="part-form">
@@ -113,7 +126,9 @@ const CreatePartForm = ({ type }: { type: string }) => {
           className="mx-auto mt-4 w-full"
           value={file}
           onChange={(file) => {
-            setFile(file);
+            if (file) {
+              setFile(file);
+            }
           }}
         />
       </div>
@@ -131,6 +146,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
             className="part-form_input"
             required
             placeholder="Part Name"
+            defaultValue={initialFormValues.name}
           />
 
           {errors.name && (
@@ -151,6 +167,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
             className="part-form_input"
             required
             placeholder="Part Description"
+            defaultValue={initialFormValues.specification}
           />
 
           {errors.specification && (
@@ -172,6 +189,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
             className="part-form_input"
             required
             placeholder="Brand"
+            defaultValue={initialFormValues.brand}
           />
 
           {errors.brand && (
@@ -194,6 +212,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
             className="part-form_input"
             required
             placeholder="part Category (Tech, Health, Education...)"
+            defaultValue={initialFormValues.category}
           />
 
           {errors.category && (
@@ -208,7 +227,7 @@ const CreatePartForm = ({ type }: { type: string }) => {
             className="part-form_btn text-white"
             disabled={isPending}
           >
-            {isPending ? "Submitting..." : "Submit Part"}
+            {isPending ? "Submitting..." : `${action} Part`}
             <Send className="size-4 ml-2" />
           </Button>
         </div>
@@ -217,4 +236,4 @@ const CreatePartForm = ({ type }: { type: string }) => {
   );
 };
 
-export default CreatePartForm;
+export default PartForm;

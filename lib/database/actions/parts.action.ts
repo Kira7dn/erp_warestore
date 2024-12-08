@@ -7,7 +7,6 @@ import Part from "@/lib/database/models/parts.model";
 import { parseServerActionResponse } from "@/lib/utils";
 
 export async function createPart(
-  state: any,
   form: FormData,
   type: string
 ) {
@@ -35,7 +34,35 @@ export async function createPart(
       error: "",
       status: "SUCCESS",
     };
-    console.log(return_data);
+    return parseServerActionResponse(return_data);
+  } catch (error) {
+    return parseServerActionResponse({
+      error: JSON.stringify(error),
+      status: "ERROR",
+    });
+  }
+}
+
+export async function getPart(_id: string) {
+  const session = await auth();
+  if (!session)
+    return parseServerActionResponse({
+      error: "Not signed in",
+      status: "ERROR",
+    });
+  try {
+    await connectToDatabase();
+    const part = await Part.findById(_id);
+    if (!part)
+      return parseServerActionResponse({
+        error: "Part not found",
+        status: "ERROR",
+      });
+    const return_data = {
+      ...part._doc,
+      error: "",
+      status: "SUCCESS",
+    };
     return parseServerActionResponse(return_data);
   } catch (error) {
     return parseServerActionResponse({
