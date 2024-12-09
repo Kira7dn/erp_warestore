@@ -338,7 +338,7 @@
   }
 
   .part-form_btn {
-    @apply capitalize bg-primary border-[4px] border-black rounded-lg p-4 font-bold text-base !important;
+    @apply capitalize border rounded-lg p-4 font-bold text-base text-white !important;
   }
 
   /* Card */

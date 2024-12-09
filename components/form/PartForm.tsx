@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { useActionState } from "react"; // Ensure correct import
+import { useActionState } from "react";
 import { partValidationSchema } from "@/lib/validation";
-import { createPart } from "@/lib/database/actions/parts.action";
+import {
+  createPart,
+  updatePart,
+} from "@/lib/database/actions/parts.action";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -14,7 +17,7 @@ import { useEdgeStore } from "@/lib/edgestore";
 import { resizeImage } from "@/lib/utils";
 
 type FormProps = {
-  type: string;
+  type: PartType;
   action: "create" | "update";
   data?: PartDataType;
 };
@@ -24,10 +27,24 @@ const PartForm = ({ type, action, data }: FormProps) => {
   >({});
   const { toast } = useToast();
   const router = useRouter();
-  const [file, setFile] = useState<File | string>(
-    data?.image || ""
-  );
+  const [file, setFile] = useState<
+    File | string | undefined
+  >(data?.image || undefined);
   const { edgestore } = useEdgeStore();
+  const uploadImage = async (uploadfile: File) => {
+    if (uploadfile instanceof File) {
+      const resizedFile = (await resizeImage(
+        uploadfile,
+        800,
+        800
+      )) as File; // Resize to max 800x800
+      const res = await edgestore.publicFiles.upload({
+        file: resizedFile,
+      });
+      return res.url;
+    }
+    return file as string;
+  };
 
   const initialFormValues = {
     name: data?.name || "",
@@ -40,30 +57,37 @@ const PartForm = ({ type, action, data }: FormProps) => {
     prevState: { error: string; status: string },
     formData: FormData
   ) => {
+    const imageUrl = await uploadImage(file as File);
     try {
-      if (file instanceof File) {
-        const resizedFile = (await resizeImage(
-          file,
-          800,
-          800
-        )) as File; // Resize to max 800x800
-        const res = await edgestore.publicFiles.upload({
-          file: resizedFile,
-        });
-        setFile(res.url);
-      }
-      const formValues = {
-        name: formData.get("name") as string,
-        type,
-        specification: formData.get(
-          "specification"
-        ) as string,
-        brand: formData.get("brand") as string,
-        image: file,
-        category: formData.get("category") as string,
-      };
+      const formValues =
+        action === "update"
+          ? {
+              _id: data?._id,
+              id: data?.id,
+              name: formData.get("name") as string,
+              type,
+              specification: formData.get(
+                "specification"
+              ) as string,
+              brand: formData.get("brand") as string,
+              image: imageUrl,
+              category: formData.get("category") as string,
+            }
+          : {
+              name: formData.get("name") as string,
+              type,
+              specification: formData.get(
+                "specification"
+              ) as string,
+              brand: formData.get("brand") as string,
+              image: imageUrl,
+              category: formData.get("category") as string,
+            };
       await partValidationSchema.parseAsync(formValues);
-      const result = await createPart(formData, type);
+      const result =
+        action === "update"
+          ? await updatePart(formValues)
+          : await createPart(formValues);
       if (result.status == "SUCCESS") {
         toast({
           title: "Success",
@@ -105,6 +129,7 @@ const PartForm = ({ type, action, data }: FormProps) => {
       };
     }
   };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(
     handleFormSubmit,
@@ -126,9 +151,7 @@ const PartForm = ({ type, action, data }: FormProps) => {
           className="mx-auto mt-4 w-full"
           value={file}
           onChange={(file) => {
-            if (file) {
-              setFile(file);
-            }
+            setFile(file);
           }}
         />
       </div>
@@ -224,7 +247,7 @@ const PartForm = ({ type, action, data }: FormProps) => {
         <div className="w-full flex items-center justify-center">
           <Button
             type="submit"
-            className="part-form_btn text-white"
+            className="part-form_btn "
             disabled={isPending}
           >
             {isPending ? "Submitting..." : `${action} Part`}

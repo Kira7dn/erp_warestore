@@ -9,9 +9,6 @@ async function page({ params }: SearchParamProps) {
   const type = ((await params)?.type as string) || "";
   const _id = ((await params)?._id as string) || "";
   const data = await getPart(_id);
-  console.log(type);
-  console.log(_id);
-  console.log(data);
   if (data.status === "ERROR") {
     return (
       <div className="w-full">
@@ -38,7 +35,11 @@ async function page({ params }: SearchParamProps) {
           </Button>
         </Link>
       </section>
-      <PartForm type={type} action="update" data={data} />
+      <PartForm
+        type={type as PartType}
+        action="update"
+        data={data}
+      />
     </div>
   );
 }

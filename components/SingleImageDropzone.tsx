@@ -28,7 +28,7 @@ type InputProps = {
   height?: number;
   className?: string;
   value?: File | string;
-  onChange?: (file?: File) => void | Promise<void>;
+  onChange?: (file?: File | string) => void | Promise<void>;
   disabled?: boolean;
   dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
 };
@@ -170,15 +170,15 @@ const SingleImageDropzone = React.forwardRef<
             <Image
               className="h-full max-h-60 w-full rounded-md object-cover"
               src={imageUrl}
-              alt={acceptedFiles[0]?.name}
+              alt={acceptedFiles[0]?.name || "image"}
               width={200}
               height={200}
             />
           ) : (
             // Upload Icon
-            <div className="text-xs flex flex-col items-center justify-center text-gray-400">
+            <div className="text-xs flex flex-col items-center justify-center text-gray-400 ">
               <UploadCloudIcon className="mb-2 h-7 w-7" />
-              <div className="text-gray-400">
+              <div className="text-gray-400 px-6 text-center">
                 Click or drag file to this area to upload
               </div>
             </div>
@@ -190,7 +190,7 @@ const SingleImageDropzone = React.forwardRef<
               className="group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform"
               onClick={(e) => {
                 e.stopPropagation();
-                void onChange?.(undefined);
+                onChange?.("");
               }}
             >
               <div className="flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black">

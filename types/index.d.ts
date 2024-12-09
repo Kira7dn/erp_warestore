@@ -12,7 +12,7 @@ declare type PartType =
 
 declare type PartDataType = {
   _id?: string;
-  id: number;
+  id?: number;
   name: string;
   type: "sparepart" | "consumable" | "material";
   specification: string;
