@@ -4,6 +4,7 @@ import "./globals.css";
 import type { Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { ChatBox } from "@/components/chat/ChatBox";
 
 export const viewport: Viewport = {
   viewportFit: "cover",
@@ -65,8 +66,10 @@ export default function RootLayout({
       className={`${LGEI.className}`}
     >
       <body>
-        <EdgeStoreProvider>{children}</EdgeStoreProvider>
-
+        <EdgeStoreProvider>
+          {children}
+          <ChatBox />
+        </EdgeStoreProvider>
         <Toaster />
       </body>
     </html>
