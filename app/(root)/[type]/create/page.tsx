@@ -8,22 +8,29 @@ const Create = async ({ params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
 
   return (
-    <div className="w-full">
-      <section className=" w-full flex justify-between items-center">
-        <h1 className="text-2xl font-bold uppercase">
-          Create {type}
-        </h1>
+    <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-8">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold tracking-tight">
+            {type === "parts"
+              ? "Thêm sản phẩm mới"
+              : "Thêm phụ tùng mới"}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Điền thông tin chi tiết vào form bên dưới
+          </p>
+        </div>
         <Link href={`/${type}`}>
-          <Button
-            className="capitalize flex items-center gap-1"
-            variant="outline"
-          >
-            <ChevronLeft />
-            <span>Back</span>
+          <Button variant="outline" className="gap-2">
+            <ChevronLeft className="h-4 w-4" />
+            <span>Quay lại</span>
           </Button>
         </Link>
-      </section>
-      <PartForm type={type} action="create" />
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <PartForm type={type as PartType} action="create" />
+      </div>
     </div>
   );
 };

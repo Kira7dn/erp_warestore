@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@/auth";
-import { connectToDatabase } from "@/lib/database";
+import { connectToDatabase } from "@/lib/database/index";
 import Part from "@/lib/database/models/parts.model";
 import { parseServerActionResponse } from "@/lib/utils";
 
@@ -46,7 +46,7 @@ export async function createPart(data: PartDataType) {
   }
 }
 
-export async function getPart(_id: string) {
+export async function getPart(id: string) {
   const session = await auth();
   if (!session)
     return parseServerActionResponse({
@@ -55,7 +55,7 @@ export async function getPart(_id: string) {
     });
   try {
     await connectToDatabase();
-    const part = await Part.findById(_id);
+    const part = await Part.findOne({ id: parseInt(id) });
     if (!part)
       return parseServerActionResponse({
         error: "Part not found",
@@ -84,8 +84,8 @@ export async function updatePart(data: PartDataType) {
     });
   try {
     await connectToDatabase();
-    const part = await Part.findByIdAndUpdate(
-      data._id,
+    const part = await Part.findOneAndUpdate(
+      { id: data.id },
       data,
       {
         new: true,
